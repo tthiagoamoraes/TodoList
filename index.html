@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <div class="container">
+    <h1 align="center">Todo List</h1>
+
+    <div class="row">
+      <!-- Input box -->
+      <div class="col-md-7">
+
+        <div class="form-group">
+          <label for="inpNewTask">Nova Tarefa</label>
+          <input type="text" class="form-control" id="inpNewTask"
+                 aria-describedby="newTaskHelp"
+                 placeholder="Adicionar tarefa">
+                  </div>
+      </div>
+
+      <!--  Buttons -->
+      <div class="col-md-5">
+        <div class="row">
+          <div class="col-6 col-sm-3 col-md-6 p-1">
+            <button class="btn btn-success col" disabled id="btnAdd">
+              <i class="fas fa-plus-square"></i> Add
+            </button>
+          </div>
+          <div class="col-6 col-sm-3 col-md-6  p-1">
+            <button class="btn btn-danger col" disabled id="btnReset">
+              <i class="fas fa-backspace"></i> Reset
+            </button>
+          </div>
+          <div class="col-6 col-sm-3 col-md-6  p-1">
+            <button class="btn btn-info col" disabled id="btnSort">
+              <i class="fas fa-sort-amount-down"></i> Sort
+            </button>
+          </div>
+          <div class="col-6 col-sm-3 col-md-6  p-1">
+            <button class="btn btn-warning col" disabled id="btnCleanup">
+              <i class="fas fa-trash-alt"></i> Cleanup
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Task List -->
+
+    <ul class="row list-group m-2" id="ulTasks">
+    </ul>
+  </div>
+
+</body>
+<script>
+    // Seleciona os elementos
+    const inpNewTask = document.getElementById('inpNewTask');
+    const ulTasks = document.getElementById('ulTasks');
+    const btnAdd = document.getElementById('btnAdd');
+    const btnReset = document.getElementById('btnReset');
+    const btnSort = document.getElementById('btnSort');
+    const btnCleanup = document.getElementById('btnCleanup');
+  
+    // Event listeners para os botões
+    inpNewTask.addEventListener('input', () => {
+      // Ativa o botão Adicionar apenas se houver texto no input
+      btnAdd.disabled = !inpNewTask.value.trim();
+    });
+  
+    btnAdd.addEventListener('click', () => {
+      // Cria um novo item de lista e adiciona à lista
+      const li = document.createElement('li');
+      li.className = 'list-group-item';
+      li.textContent = inpNewTask.value.trim();
+      ulTasks.appendChild(li);
+      inpNewTask.value = ''; // Limpa o input
+      btnAdd.disabled = true; // Desativa o botão Adicionar
+      btnReset.disabled = false; // Ativa o botão Reset
+      btnSort.disabled = false; // Ativa o botão Sort
+      btnCleanup.disabled = false; // Ativa o botão Cleanup
+    });
+  
+    btnReset.addEventListener('click', () => {
+      // Limpa a lista de tarefas e desativa os botões
+      ulTasks.innerHTML = '';
+      btnReset.disabled = true;
+      btnSort.disabled = true;
+      btnCleanup.disabled = true;
+    });
+  
+    btnSort.addEventListener('click', () => {
+      // Classifica as tarefas em ordem alfabética
+      const tasksArray = Array.from(ulTasks.children);
+      tasksArray.sort((a, b) => a.textContent.localeCompare(b.textContent));
+      ulTasks.innerHTML = '';
+      tasksArray.forEach(task => ulTasks.appendChild(task));
+    });
+  
+    btnCleanup.addEventListener('click', () => {
+      // Remove as tarefas completadas
+      Array.from(ulTasks.children).forEach(task => {
+        if (task.classList.contains('done')) {
+          ulTasks.removeChild(task);
+        }
+      });
+    });
+  
+    // Marca uma tarefa como completa quando clicada
+    ulTasks.addEventListener('click', e => {
+      if (e.target.tagName === 'LI') {
+        e.target.classList.toggle('done');
+      }
+    });
+  </script>
+  
+</html>
